@@ -1,7 +1,18 @@
 const puppeteer = require('puppeteer');
+require("dotenv").config();
 
 async function trabajando() {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+        args: [
+            "--disble-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote"
+        ],
+        executablePath: process.env.NODE_ENV === "production" 
+        ? process.env.PUPPETEER_EXECUTABLE_PATH 
+        : puppeteer.executablePath()
+    });
     const page = await browser.newPage();
     await page.goto('https://www.trabajando.cl/trabajo-empleo/?fechaPublicacion=20240622', { waitUntil: 'networkidle2' });
 
